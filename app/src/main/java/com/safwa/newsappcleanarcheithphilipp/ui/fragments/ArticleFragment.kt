@@ -1,4 +1,4 @@
-package com.safwa.newsappcleanarcheithphilipp.ui.article
+package com.safwa.newsappcleanarcheithphilipp.ui.fragments
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.safwa.newsappcleanarcheithphilipp.R
+import com.safwa.newsappcleanarcheithphilipp.ui.viewmodels.ArticleViewModel
 
 class ArticleFragment : Fragment() {
 

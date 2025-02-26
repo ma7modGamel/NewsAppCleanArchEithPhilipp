@@ -1,4 +1,4 @@
-package com.safwa.newsappcleanarcheithphilipp.ui.article
+package com.safwa.newsappcleanarcheithphilipp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 
