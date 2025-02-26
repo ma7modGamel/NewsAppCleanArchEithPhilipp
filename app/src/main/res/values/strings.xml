@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NewsAppCleanArchEithPhilipp</string>
+    <string name="api_key">eead54c6cdb1476baee28d3a32eaa1eb</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="title_breaking">Home</string>
+    <string name="title_saved">Dashboard</string>
+    <string name="title_search">Notifications</string>
 </resources>
