@@ -1,4 +1,4 @@
-package com.safwa.newsappcleanarcheithphilipp.ui.breaking
+package com.safwa.newsappcleanarcheithphilipp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.safwa.newsappcleanarcheithphilipp.databinding.FragmentBreakingNewsBinding
+import com.safwa.newsappcleanarcheithphilipp.databinding.FragmentSavedNewsBinding
+import com.safwa.newsappcleanarcheithphilipp.ui.viewmodels.SavedViewModel
 
-class BreakingFragment : Fragment() {
 
-    private var _binding: FragmentBreakingNewsBinding? = null
+class SavedFragment : Fragment() {
+
+    private var _binding: FragmentSavedNewsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +24,14 @@ class BreakingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val breakingViewModel =
-            ViewModelProvider(this).get(BreakingViewModel::class.java)
+        val savedViewModel =
+            ViewModelProvider(this).get(SavedViewModel::class.java)
 
-        _binding = FragmentBreakingNewsBinding.inflate(inflater, container, false)
+        _binding = FragmentSavedNewsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        breakingViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textDashboard
+        savedViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

@@ -20,8 +20,8 @@ class NewsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_news)
+        val navController = binding.navHostFragmentActivityNews.findNavController()
+        //val navController = findNavController(R.id.nav_host_fragment_activity_news)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -29,6 +29,8 @@ class NewsActivity : AppCompatActivity() {
                 R.id.navigation_breaking, R.id.navigation_save, R.id.navigation_search
             )
         )
+
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
