@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_breaking"
-        android:name="com.safwa.newsappcleanarcheithphilipp.ui.breaking.BreakingFragment"
+        android:name="com.safwa.newsappcleanarcheithphilipp.ui.fragments.BreakingFragment"
         android:label="@string/title_breaking"
         tools:layout="@layout/fragment_breaking_news" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/navigation_save"
-        android:name="com.safwa.newsappcleanarcheithphilipp.ui.saved.SavedFragment"
+        android:name="com.safwa.newsappcleanarcheithphilipp.ui.fragments.SavedFragment"
         android:label="@string/title_saved"
         tools:layout="@layout/fragment_saved_news" >
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.safwa.newsappcleanarcheithphilipp.ui.search.SearchNewsFragment"
+        android:name="com.safwa.newsappcleanarcheithphilipp.ui.fragments.SearchNewsFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search_news" >
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/articleFragment"
-        android:name="com.safwa.newsappcleanarcheithphilipp.ui.article.ArticleFragment"
+        android:name="com.safwa.newsappcleanarcheithphilipp.ui.fragments.ArticleFragment"
         android:label="fragment_article"
         tools:layout="@layout/fragment_article" />
 </navigation>
