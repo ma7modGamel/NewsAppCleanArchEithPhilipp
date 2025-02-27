@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.generators.BuildConfigData
+import com.android.builder.compiling.BuildConfigType
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -39,6 +42,17 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
+    }
+
+    buildTypes {
+        debug {
+
+        }
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
 
 }
@@ -79,11 +93,30 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
-    implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.okhttp.urlconnection)
 
     debugImplementation(libs.chucker)
     releaseImplementation(libs.chucker.no.op)
+    implementation(libs.retrofit)
+    implementation (libs.gson)
+    implementation (libs.moshi)
+    implementation (libs.moshi.kotlin)
+    implementation (libs.converter.moshi)
+    implementation (libs.adapter.rxjava3)
+    implementation (libs.rxjava)
+    implementation (libs.rxandroid)
+
+    implementation (libs.timber)
+
+    //third party lib to observe to network
+    implementation(libs.reactivenetwork)
+
+//datastore
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.androidx.datastore.preferences.core.jvm)
 }
