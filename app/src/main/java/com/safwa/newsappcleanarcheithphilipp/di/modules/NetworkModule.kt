@@ -93,7 +93,7 @@ object RetrofitModule {
 
 
     @Provides
-    fun provideAuthToken(preferenceDataStore: IPreferenceDataStoreAPI): String? {
+    fun provideAuthToken(preferenceDataStore: IPreferenceDataStoreAPI): String {
         return runBlocking {
             preferenceDataStore.getFirstPreference(
                 PreferenceDataStoreConstants.AUTH_TOKEN,
