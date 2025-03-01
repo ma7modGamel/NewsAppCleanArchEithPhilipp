@@ -27,12 +27,14 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.URL
+
 object RetrofitHelper {
     private var retrofit: Retrofit? = null
 
 
 
-    fun getInstance(baseUrl: String = RetrofitConstant.URL): Retrofit {
+    fun getInstance(baseUrl: String =URL): Retrofit {
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
                 .client(getOkHttpClient())
