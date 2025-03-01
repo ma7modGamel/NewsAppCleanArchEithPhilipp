@@ -1,12 +1,12 @@
 package com.safwa.newsappcleanarcheithphilipp.di.modules
 
 import android.net.ConnectivityManager
-import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.RetrofitConstant
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.safwa.newsappcleanarcheithphilipp.myapp.MyApp
+import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.URL
 import com.safwa.souqclean.data.datasource.local.prefrances.IPreferenceDataStoreAPI
 import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreConstants
 import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreHelper
@@ -43,10 +43,7 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        baseUrl: String = RetrofitConstant.URL
-    ): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String = URL): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(baseUrl)
@@ -58,10 +55,7 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-        context: Context,
-        preferenceDataStore: IPreferenceDataStoreAPI
-    ): OkHttpClient {
+    fun provideOkHttpClient(context: Context, preferenceDataStore: IPreferenceDataStoreAPI): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level =
                 if (isDebuggable(context)) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
