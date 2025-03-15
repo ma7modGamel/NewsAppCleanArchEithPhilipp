@@ -29,10 +29,7 @@ class BreakingFragment : Fragment() {
         _binding = FragmentBreakingNewsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        breakingViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+
         return root
     }
 
