@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.ApiServices
 import com.safwa.newsappcleanarcheithphilipp.myapp.MyApp
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.URL
 import com.safwa.souqclean.data.datasource.local.prefrances.IPreferenceDataStoreAPI
@@ -25,6 +26,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
@@ -43,12 +45,19 @@ object RetrofitModule {
 
     @Provides
     @Singleton
+    fun provideApiServices(retrofit: Retrofit): ApiServices {
+        return retrofit.create(ApiServices::class.java)
+    }
+
+
+    @Provides
+    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String = URL): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl(baseUrl)
+            .baseUrl("https://newsapi.org/v2/")
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }

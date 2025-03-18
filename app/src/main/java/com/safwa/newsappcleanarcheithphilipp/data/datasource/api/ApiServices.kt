@@ -19,13 +19,13 @@ interface ApiServices {
     ): Response<NewsModel>
 
 
-    @GET("everything")
-    suspend fun getSearchNews(
-        @Query("q") searchQuery: String,
-        @Query("page") pageNumber: Int=1,
-        @Query("sortBy") sortBy: String,
-        @Query("apiKey") apiKey: String= API_KEY,
-    ): StateFlow<Response<NewsModel>>
+//    @GET("everything")
+//    suspend fun getSearchNews(
+//        @Query("q") searchQuery: String,
+//        @Query("page") pageNumber: Int=1,
+//        @Query("sortBy") sortBy: String,
+//        @Query("apiKey") apiKey: String= API_KEY,
+//    ): StateFlow<Response<NewsModel>>
 
 
 

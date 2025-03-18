@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
 import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
 import com.safwa.newsappcleanarcheithphilipp.data.repository.NewsRepository
 import com.safwa.newsappcleanarcheithphilipp.utils.Resource
@@ -34,12 +33,12 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
 
     private fun handleBreakingNewsResponse(response: Response<NewsModel>): Resource<NewsModel> {
 
-        if(response.value.isSuccessful){
-            response.value.body().let{ resultResponse->
+        if(response.isSuccessful){
+            response.body().let{ resultResponse->
                 return Resource.Success(resultResponse!!)
             }
         }
-        return Resource.Error(response.value.message())
+        return Resource.Error(response.message())
     }
 
 }

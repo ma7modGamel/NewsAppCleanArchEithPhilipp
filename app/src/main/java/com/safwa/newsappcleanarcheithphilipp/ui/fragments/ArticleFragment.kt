@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.safwa.newsappcleanarcheithphilipp.R
 import com.safwa.newsappcleanarcheithphilipp.ui.viewmodels.ArticleViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class ArticleFragment : Fragment() {
 
     companion object {

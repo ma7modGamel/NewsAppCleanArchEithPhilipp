@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel.Article
 import com.safwa.newsappcleanarcheithphilipp.databinding.ItemArticleBinding
 
 class ArticleAdapters() : ListAdapter<Article, ArticleAdapters.ArticleViewHolder>(ArticleDiffUtils()) {
