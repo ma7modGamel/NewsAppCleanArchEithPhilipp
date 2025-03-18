@@ -5,6 +5,7 @@ import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.API_KEY
 import kotlinx.coroutines.flow.StateFlow
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,7 +16,7 @@ interface ApiServices {
         @Query("page") pageNumber: Int=1,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String= API_KEY,
-    ): StateFlow<List<NewsModel>>
+    ): Response<NewsModel>
 
 
     @GET("everything")
@@ -24,7 +25,7 @@ interface ApiServices {
         @Query("page") pageNumber: Int=1,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String= API_KEY,
-    ): StateFlow<List<NewsModel>>
+    ): StateFlow<Response<NewsModel>>
 
 
 
