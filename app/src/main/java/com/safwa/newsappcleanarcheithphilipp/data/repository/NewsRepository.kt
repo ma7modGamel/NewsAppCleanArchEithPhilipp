@@ -1,30 +1,70 @@
 package com.safwa.newsappcleanarcheithphilipp.data.repository
 
-import androidx.paging.PagingData
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.ApiServices
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.local.db.ArticleDatabase
 import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.API_KEY
+import com.safwa.newsappcleanarcheithphilipp.utils.Result
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
-class NewsRepository @Inject constructor(private val apiService: ApiServices,private val db:ArticleDatabase) {
+class NewsRepository @Inject constructor(
+    private val apiService: ApiServices,
+    private val db: ArticleDatabase
+) {
 
-//    suspend fun getNewsFromApi(countryCode: String, pageNumber: Int, sortBy: String): Flow<PagingData<NewsItem>>{
-//        apiService.getBreakingNews()
-//    }
+
+    suspend fun getNewsFromApi(
+        countryCode: String,
+        pageNumber: Int,
+        sortBy: String
+    ): Result<NewsModel> {
 
 
-    suspend fun getNewsFromApi(countryCode: String, pageNumber: Int, sortBy: String): Response<NewsModel> {
-
-        val response = apiService.getBreakingNews(
-            countryCode = countryCode, pageNumber = pageNumber, sortBy = sortBy,
-            API_KEY
+        val newsModel = apiService.getBreakingNews(
+            countryCode = countryCode,
+            pageNumber = pageNumber,
+            sortBy = sortBy, API_KEY
         )
+        return safeApiCall { newsModel }
 
-        return response
     }
+
+
+    fun getNewUsingFlowAndStateFlow(): Flow<Result<NewsModel>> = flow {
+        emit(Result.Loading())
+        emit(
+            safeApiCall {
+                apiService.getBreakingNews(
+                    countryCode = "us",
+                    pageNumber = 1,
+                    sortBy = "publishedAt",
+                    API_KEY
+                )
+            }
+        )
+    }
+
+
+
+    private suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
+        return try {
+            Result.Success(call.invoke())
+        } catch (e: HttpException) {
+            Result.Error("Network error: ${e.code()} - ${e.message()}", data = null)
+        } catch (e: IOException) {
+            Result.Error("No internet connection", data = null)
+        } catch (e: Exception) {
+            Result.Error("Unexpected error: ${e.message}", data = null)
+        }
+    }
+
+
 
 
 
@@ -37,8 +77,7 @@ class NewsRepository @Inject constructor(private val apiService: ApiServices,pri
 //    }
 
 
-
-    suspend fun getNewsFromDb()=db.getArticleDao().getAllArticles()
+    suspend fun getNewsFromDb() = db.getArticleDao().getAllArticles()
 
 
 }
