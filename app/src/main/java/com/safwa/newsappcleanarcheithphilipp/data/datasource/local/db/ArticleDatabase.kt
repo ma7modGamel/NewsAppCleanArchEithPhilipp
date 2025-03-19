@@ -6,10 +6,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
 
 
-@Database(entities = [NewsModel.Article::class], version = 1, exportSchema = false)
+@Database(entities = [Article::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ArticleDatabase :RoomDatabase() {
     abstract fun getArticleDao(): ArticleDao

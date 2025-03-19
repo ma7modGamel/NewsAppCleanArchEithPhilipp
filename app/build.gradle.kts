@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.safwa.newsappcleanarcheithphilipp"
-        minSdk = 28
+        minSdk = 32
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -104,7 +104,9 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.moshi)
     implementation (libs.moshi.kotlin)
+    implementation (libs.kotlin.reflect) // عدّل الإصدار حسب إصدار Kotlin بتاعك
     implementation (libs.converter.moshi)
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
     implementation (libs.adapter.rxjava3)
     implementation (libs.rxjava)
     implementation (libs.rxandroid)

@@ -1,11 +1,17 @@
-package com.safwa.newsappcleanarcheithphilipp.data.datasource.api
-
-
+import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-
-import com.safwa.newsappcleanarcheithphilipp.myapp.MyApp
-
+import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.ApiServices
+import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.URL
+import com.safwa.souqclean.data.datasource.local.prefrances.IPreferenceDataStoreAPI
+import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreConstants
+import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreHelper
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -20,54 +26,63 @@ import java.io.File
 import java.io.IOException
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
-import android.content.Context
-import android.content.pm.ApplicationInfo
-import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.URL
+import kotlinx.coroutines.runBlocking
 
-object RetrofitHelper {
-    private var retrofit: Retrofit? = null
+@Module
+@InstallIn(SingletonComponent::class)
+object RetrofitModule {
 
-
-
-    fun getInstance(baseUrl: String =URL): Retrofit {
-        if (retrofit == null) {
-            retrofit = Retrofit.Builder()
-                .client(getOkHttpClient())
-                .baseUrl(baseUrl)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(
-                    GsonConverterFactory.create()
-                )
-                .addConverterFactory(MoshiConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build()
-        }
-        return retrofit!!
+    @Provides
+    @Singleton
+    fun provideApiServices(retrofit: Retrofit): ApiServices {
+        return retrofit.create(ApiServices::class.java)
     }
 
-    fun updateBaseUrl(newBaseUrl: String): Retrofit {
-        retrofit = null // إعادة إنشاء الكائن إذا تغير Base URL
-        return getInstance(newBaseUrl)
+    @Provides
+    @Singleton
+    @Named("defaultRetrofit") // لدعم أكثر من مثيل لـ Retrofit إذا لزم الأمر
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        @Named("baseUrl") baseUrl: String = URL // افتراضيًا يأخذ URL من Constants
+    ): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create()) // أضفت Moshi كما في RetrofitHelper
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .build()
     }
 
+//    @Provides
+//    @Singleton
+//    @Named("baseUrl")
+//    fun provideBaseUrl(preferenceDataStore: IPreferenceDataStoreAPI): String {
+//        // دعم ديناميكي لـ baseUrl من DataStore إذا كنت تحتاجه
+//        return runBlocking {
+//            preferenceDataStore.getFirstPreference(
+//                //"BASE_URL_KEY", // أضف مفتاحًا في PreferenceDataStoreConstants إذا لزم الأمر
+//                n,
+//                defaultValue = URL
+//            )
+//        }
+//    }
 
-
-
-    private fun isDebuggable(context: Context): Boolean {
-        return context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-    }
-
-
-
-    private fun getOkHttpClient(): OkHttpClient {
-
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context,
+        preferenceDataStore: IPreferenceDataStoreAPI
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = if (isDebuggable(MyApp.myAppContext)) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+            level = if (isDebuggable(context)) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
 
         return OkHttpClient.Builder()
@@ -76,30 +91,94 @@ object RetrofitHelper {
                 val requestBuilder = chain.request().newBuilder()
                     .header("Accept", "application/json")
                     .header("Platform", "Android")
-                    .header("Authorization", "Bearer ${getAuthToken() ?: ""}")
+                    .header(
+                        "Authorization",
+                        "Bearer ${provideAuthToken(preferenceDataStore) ?: ""}"
+                    )
                 chain.proceed(requestBuilder.build())
             }
-            .addInterceptor(RetryInterceptor(maxRetries = 3))
-            .addInterceptor(OfflineInterceptor())
-            .cache(Cache(
-                directory = File(MyApp.myAppContext.cacheDir, "http-cache"),
-                maxSize = 10L * 1024L * 1024L // 10 MiB
-            ))
-            .sslSocketFactory(getSSLSocketFactory(), getX509TrustManager())
-            .hostnameVerifier { _, _ -> true }
+            .addInterceptor(provideRetryInterceptor())
+            .addInterceptor(provideOfflineInterceptor(context))
+            .cache(provideCache(context))
+            .sslSocketFactory(provideSSLSocketFactory(), provideX509TrustManager())
+            .hostnameVerifier { _, _ -> true } // نفس الإعداد من RetrofitHelper
             .connectTimeout(120, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
-            .addInterceptor(ChuckerInterceptor(MyApp.myAppContext))
+            .addInterceptor(ChuckerInterceptor(context))
             .build()
     }
 
-    private fun getAuthToken(): String? {
-        // تنفيذ منطق الحصول على التوكين من SharedPreferences أو نظام المصادقة
-        return null // استبدل بمنطقك الفعلي
+    @Provides
+    @Singleton
+    fun provideAuthToken(preferenceDataStore: IPreferenceDataStoreAPI): String? {
+        return runBlocking {
+            preferenceDataStore.getFirstPreference(
+                PreferenceDataStoreConstants.AUTH_TOKEN, defaultValue = "" // يمكن أن يكون في PreferenceDataStoreConstants
+            )
+        }
     }
 
-    private fun getSSLSocketFactory(): SSLSocketFactory {
+    @Provides
+    @Singleton
+    fun provideRetryInterceptor(): Interceptor {
+        return object : Interceptor {
+            override fun intercept(chain: Interceptor.Chain): Response {
+                var attempt = 0
+                var lastException: Exception? = null
+                val maxRetries = 3
+
+                while (attempt < maxRetries) {
+                    try {
+                        val request = chain.request()
+                        val response = chain.proceed(request)
+                        if (response.isSuccessful) return response
+                        if (response.code in 500..599) {
+                            response.close()
+                            attempt++
+                            continue
+                        }
+                        return response
+                    } catch (e: IOException) {
+                        lastException = e
+                        if (attempt == maxRetries - 1) throw e
+                        attempt++
+                        Thread.sleep((attempt * 1000).toLong())
+                    }
+                }
+                throw lastException ?: Exception("Max retries reached")
+            }
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideOfflineInterceptor(@ApplicationContext context: Context): Interceptor {
+        return object : Interceptor {
+            override fun intercept(chain: Interceptor.Chain): Response {
+                var request = chain.request()
+                if (!isNetworkAvailable(context)) {
+                    request = request.newBuilder()
+                        .header("Cache-Control", "public, only-if-cached, max-stale=2419200") // 28 days
+                        .build()
+                }
+                return chain.proceed(request)
+            }
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideCache(@ApplicationContext context: Context): Cache {
+        return Cache(
+            directory = File(context.cacheDir, "http-cache"),
+            maxSize = 10L * 1024L * 1024L // 10 MiB
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideSSLSocketFactory(): SSLSocketFactory {
         val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         trustManagerFactory.init(null as KeyStore?)
         val trustManagers = trustManagerFactory.trustManagers
@@ -107,59 +186,32 @@ object RetrofitHelper {
             "Unexpected default trust managers: ${trustManagers.contentToString()}"
         }
         return SSLContext.getInstance("TLS").apply {
-            init(null, arrayOf(trustManagers[0]), null)
+            init(null, trustManagers, null)
         }.socketFactory
     }
 
-    private fun getX509TrustManager(): X509TrustManager {
+    @Provides
+    @Singleton
+    fun provideX509TrustManager(): X509TrustManager {
         val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         trustManagerFactory.init(null as KeyStore?)
         val trustManagers = trustManagerFactory.trustManagers
         return trustManagers[0] as X509TrustManager
     }
 
-    class RetryInterceptor(private val maxRetries: Int) : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            var attempt = 0
-            var lastException: Exception? = null
-
-            while (attempt < maxRetries) {
-                try {
-                    val request = chain.request()
-                    val response = chain.proceed(request)
-                    if (response.isSuccessful) return response
-                    if (response.code in 500..599) {
-                        response.close()
-                        attempt++
-                        continue
-                    }
-                    return response
-                } catch (e: IOException) {
-                    lastException = e
-                    if (attempt == maxRetries - 1) throw e
-                    attempt++
-                    Thread.sleep((attempt * 1000).toLong())
-                }
-            }
-            throw lastException ?: Exception("Max retries reached")
-        }
+    @Provides
+    @Singleton
+    fun providePreferenceDataStore(@ApplicationContext context: Context): IPreferenceDataStoreAPI {
+        return PreferenceDataStoreHelper(context)
     }
 
-    class OfflineInterceptor : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            var request = chain.request()
-            if (!isNetworkAvailable()) {
-                request = request.newBuilder()
-                    .header("Cache-Control", "public, only-if-cached, max-stale=2419200")
-                    .build()
-            }
-            return chain.proceed(request)
-        }
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
 
-        private fun isNetworkAvailable(): Boolean {
-            val connectivityManager = MyApp.myAppContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = connectivityManager.activeNetworkInfo
-            return networkInfo != null && networkInfo.isConnected
-        }
+    private fun isDebuggable(context: Context): Boolean {
+        return context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
     }
 }

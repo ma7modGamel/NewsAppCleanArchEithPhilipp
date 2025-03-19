@@ -16,7 +16,7 @@ interface ApiServices {
         @Query("page") pageNumber: Int=1,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String= API_KEY,
-    ): Response<NewsModel>
+    ): NewsModel
 
 
 //    @GET("everything")
