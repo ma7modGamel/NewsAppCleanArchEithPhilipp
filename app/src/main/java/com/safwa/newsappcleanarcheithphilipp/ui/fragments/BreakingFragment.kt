@@ -68,7 +68,7 @@ class BreakingFragment : Fragment() {
     private fun getDataUsingFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getNewsFlow().collect { result ->
+                viewModel.newsFlow.collect { result ->
                     fetchDataInViews(result, "getDataUsingFlow")
                 }
             }
