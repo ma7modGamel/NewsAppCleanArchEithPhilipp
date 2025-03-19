@@ -1,22 +1,17 @@
 package com.safwa.newsappcleanarcheithphilipp.ui.fragments
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresExtension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
 import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
 import com.safwa.newsappcleanarcheithphilipp.databinding.FragmentBreakingNewsBinding
 import com.safwa.newsappcleanarcheithphilipp.ui.adapters.ArticleAdapters
@@ -53,6 +48,7 @@ class BreakingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupViews()
+
         getData()
         getDataUsingFlow()
         getDataUsingStateFlow()
@@ -62,8 +58,8 @@ class BreakingFragment : Fragment() {
     private fun getDataUsingStateFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.newsState.collect { result ->
-                    fetchDataInViews(result)
+                viewModel.newsStateFlow.collect { result ->
+                    fetchDataInViews(result, "getDataUsingStateFlow")
                 }
             }
         }
@@ -72,8 +68,8 @@ class BreakingFragment : Fragment() {
     private fun getDataUsingFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.newsFlow.collect { result ->
-                    fetchDataInViews(result)
+                viewModel.getNewsFlow().collect { result ->
+                    fetchDataInViews(result, "getDataUsingFlow")
                 }
             }
         }
@@ -84,7 +80,7 @@ class BreakingFragment : Fragment() {
     private fun getData() {
         viewModel.getBreakingNews("us",1,"publishedAt")
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
-            fetchDataInViews(response)
+            fetchDataInViews(response,"getData")
         })
     }
 
@@ -97,9 +93,9 @@ class BreakingFragment : Fragment() {
         binding.rv.setHasFixedSize(true)
     }
 
-    private fun fetchDataInViews(result: Result<NewsModel>) {
+    private fun fetchDataInViews(result: Result<NewsModel>, txt: String) {
 
-        Timber.e("resultxxx is ${Gson().toJson(result)}")
+        Timber.e(txt+"---resultxxx is ${Gson().toJson(result)}")
         when (result) {
 
             is Loading -> {

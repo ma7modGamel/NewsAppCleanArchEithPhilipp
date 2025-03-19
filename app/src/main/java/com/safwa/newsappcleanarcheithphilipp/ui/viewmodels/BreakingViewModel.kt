@@ -1,12 +1,9 @@
 package com.safwa.newsappcleanarcheithphilipp.ui.viewmodels
 
-import android.os.Build
-import androidx.annotation.RequiresExtension
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
 import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
 import com.safwa.newsappcleanarcheithphilipp.data.repository.NewsRepository
 import com.safwa.newsappcleanarcheithphilipp.utils.Result
@@ -19,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 import javax.inject.Inject
 
@@ -69,21 +65,18 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
         )
 
 
-    private val _newsState = MutableStateFlow<Result<NewsModel>>(Result.Loading())
-    val newsState: StateFlow<Result<NewsModel>> = _newsState.asStateFlow()
+    private val _newsStateFlow = MutableStateFlow<Result<NewsModel>>(Result.Loading())
+    val newsStateFlow: StateFlow<Result<NewsModel>> = _newsStateFlow.asStateFlow()
 
     init {
         fetchNews()
     }
-
-
     private fun fetchNews() {
         viewModelScope.launch {
             repository.getNewUsingFlowAndStateFlow().collect { result ->
-                _newsState.value = result // ببعت كل تحديث للـ StateFlow
+                _newsStateFlow.value = result // ببعت كل تحديث للـ StateFlow
             }
         }
     }
-
 
 }
