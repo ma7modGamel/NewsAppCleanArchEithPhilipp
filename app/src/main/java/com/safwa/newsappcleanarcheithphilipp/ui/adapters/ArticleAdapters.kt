@@ -47,6 +47,8 @@ class ArticleAdapters() : ListAdapter<Article, ArticleAdapters.ArticleViewHolder
     override fun onBindViewHolder(holder: ArticleViewHolder, p1: Int) {
         holder.bind(getItem(p1))
     }
+
+
 }
 
 

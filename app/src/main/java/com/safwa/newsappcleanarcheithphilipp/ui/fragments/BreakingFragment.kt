@@ -86,7 +86,7 @@ class BreakingFragment : Fragment() {
 
     private fun setupViews() {
 
-        adapter = ArticleAdapters()
+        adapter = ArticleLis()
         val manger = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.rv.layoutManager = manger
         binding.rv.adapter = adapter
