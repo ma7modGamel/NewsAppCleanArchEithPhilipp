@@ -1,16 +1,15 @@
 package com.safwa.newsappcleanarcheithphilipp.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresExtension
+
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.ApiServices
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.local.db.ArticleDatabase
 import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.utils.ApiUtils.safeApiCall
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.API_KEY
 import com.safwa.newsappcleanarcheithphilipp.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
+
 import javax.inject.Inject
 
 class NewsRepository @Inject constructor(
@@ -51,18 +50,27 @@ class NewsRepository @Inject constructor(
     }
 
 
-
-    private suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
-        return try {
-            Result.Success(call.invoke())
-        } catch (e: HttpException) {
-            Result.Error("Network error: ${e.code()} - ${e.message()}", data = null)
-        } catch (e: IOException) {
-            Result.Error("No internet connection", data = null)
-        } catch (e: Exception) {
-            Result.Error("Unexpected error: ${e.message}", data = null)
-        }
+    fun getResultSearchFlowAndStateFlow(query: String): Flow<Result<NewsModel>> = flow {
+        emit(Result.Loading())
+        emit(
+            safeApiCall {
+                apiService.getSearchNews(
+                    pageNumber = 1,
+                    sortBy = "publishedAt",
+                    searchQuery = query,
+                    apiKey = API_KEY
+                )
+            }
+        )
     }
+
+
+
+
+
+
+
+
 
 
 
