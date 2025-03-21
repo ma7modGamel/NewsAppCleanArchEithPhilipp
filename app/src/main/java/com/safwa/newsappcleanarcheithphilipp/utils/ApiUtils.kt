@@ -6,7 +6,7 @@ import androidx.annotation.RequiresExtension
 import retrofit2.HttpException
 import java.io.IOException
 
-class ApiUtils {
+object ApiUtils {
 
     suspend fun <T> safeApiCall(call: suspend () -> T): Result<T> {
         return try {
