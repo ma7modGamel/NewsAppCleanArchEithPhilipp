@@ -9,6 +9,7 @@ import com.safwa.newsappcleanarcheithphilipp.BuildConfig
 import com.safwa.newsappcleanarcheithphilipp.utils.Logger
 import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreConstants
 import com.safwa.souqclean.data.datasource.local.prefrances.PreferenceDataStoreHelper
+import dagger.hilt.android.HiltAndroidApp
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import rx.schedulers.Schedulers
 import timber.log.Timber
 
-
+@HiltAndroidApp
 class MyApp : Application() {
 
 

@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.safwa.newsappcleanarcheithphilipp.databinding.FragmentSavedNewsBinding
 import com.safwa.newsappcleanarcheithphilipp.ui.viewmodels.SavedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class SavedFragment : Fragment() {
 
     private var _binding: FragmentSavedNewsBinding? = null
@@ -30,10 +32,7 @@ class SavedFragment : Fragment() {
         _binding = FragmentSavedNewsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        savedViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+
         return root
     }
 

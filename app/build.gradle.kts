@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.safwa.newsappcleanarcheithphilipp"
-        minSdk = 28
+        minSdk = 32
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.legacy.support.v4)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -103,7 +104,9 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.moshi)
     implementation (libs.moshi.kotlin)
+    implementation (libs.kotlin.reflect) // عدّل الإصدار حسب إصدار Kotlin بتاعك
     implementation (libs.converter.moshi)
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
     implementation (libs.adapter.rxjava3)
     implementation (libs.rxjava)
     implementation (libs.rxandroid)
@@ -119,4 +122,31 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.androidx.datastore.preferences.core.jvm)
+
+
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
+    ksp(libs.androidx.room.compiler)
+    // If this project only uses Java source, use the Java annotationProcessor
+    // No additional plugins are necessary
+    annotationProcessor(libs.androidx.room.compiler)
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+//    // optional - RxJava3 support for Room
+//    implementation(libs.androidx.room.rxjava3)
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation(libs.androidx.room.guava)
+    // optional - Test helpers
+    testImplementation(libs.androidx.room.testing)
+    // optional - Paging 3 Integration
+    implementation(libs.androidx.room.paging)
+
+    implementation (libs.androidx.paging.runtime.ktx)
+
+
+
 }
