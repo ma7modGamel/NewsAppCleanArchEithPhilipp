@@ -57,7 +57,8 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
 
 
 
-    val newsFlow: Flow<Result<NewsModel>> = repository.getNewUsingFlowAndStateFlow()
+    val newsFlow: Flow<Result<NewsModel>> =
+        repository.getNewUsingFlowAndStateFlow()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000), // بيوقف بعد 5 ثواني من عدم الاشتراك

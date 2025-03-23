@@ -13,12 +13,12 @@ class GenericPagingSource<T : Any>(private val dataSource: DataSource<T>) : Pagi
 
     }
 
-//
-//    بتحدد نقطة البداية لإعادة تحميل البيانات (Refresh)
-//    لو حصل تغيير في الـ Data (مثل إضافة/حذف عنصر أو تحديث).
-//    بيحتوي على معلومات عن الصفحات المحملة حاليًا:  PagingState
- //   امتى بيشتغل؟: بيتم استدعاؤه لما تعمل adapter.refresh()
-    //   أو لما Paging 3 تحتاج تعيد تحميل البيانات من نقطة معينة (مثل بعد تغيير في الـ Data Source).
+        //
+        //    بتحدد نقطة البداية لإعادة تحميل البيانات (Refresh)
+        //    لو حصل تغيير في الـ Data (مثل إضافة/حذف عنصر أو تحديث).
+        //    بيحتوي على معلومات عن الصفحات المحملة حاليًا:  PagingState
+        //   امتى بيشتغل؟: بيتم استدعاؤه لما تعمل adapter.refresh()
+        //   أو لما Paging 3 تحتاج تعيد تحميل البيانات من نقطة معينة (مثل بعد تغيير في الـ Data Source).
 
 
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
