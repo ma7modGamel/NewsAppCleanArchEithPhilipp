@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse.Data.Article
 import com.safwa.newsappcleanarcheithphilipp.databinding.ItemArticleBinding
 
 class ArticleAdapters() : ListAdapter<Article, ArticleAdapters.ArticleViewHolder>(ArticleDiffUtils()) {
@@ -19,7 +20,7 @@ class ArticleAdapters() : ListAdapter<Article, ArticleAdapters.ArticleViewHolder
             binding.tv.text = item?.title
             binding.tv2.text = item?.description
             Glide.with(binding.root.context)
-                .load(item?.urlToImage)
+                .load(item?.url)
                 .into(binding.img)
         }
     }

@@ -6,7 +6,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse.Data.Article
 
 
 @Dao

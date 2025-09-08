@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse.Data.Article
 import com.safwa.newsappcleanarcheithphilipp.databinding.ItemArticleBinding
 
 
@@ -28,6 +29,9 @@ class ArticlePagingAdapter() : PagingDataAdapter<Article, ArticlePagingAdapter.V
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Article) {
+
+            binding.tv.text = item.title
+            //binding.executePendingBindings()
 
         }
 

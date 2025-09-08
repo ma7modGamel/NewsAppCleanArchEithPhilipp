@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
 import com.safwa.newsappcleanarcheithphilipp.data.repository.NewsRepository
 import com.safwa.newsappcleanarcheithphilipp.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BreakingViewModel @Inject constructor(private val repository: NewsRepository): ViewModel() {
 
-    private val breakingNewsList = MutableLiveData<Result<NewsModel>>(Result.Loading())
-    val breakingNews: LiveData<Result<NewsModel>> = breakingNewsList
+    private val breakingNewsList = MutableLiveData<Result<NewsResponse>>(Result.Loading())
+    val breakingNews: LiveData<Result<NewsResponse>> = breakingNewsList
 
     fun getBreakingNews (countryCode: String, pageNumber: Int, sortBy: String): Job {
         return viewModelScope.launch {
@@ -36,7 +36,7 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
     }
 
 
-    private fun handleBreakingNewsResponse(response: Result<NewsModel>) {
+    private fun handleBreakingNewsResponse(response: Result<NewsResponse>) {
         viewModelScope.launch {
 
             when (response) {
@@ -57,7 +57,7 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
 
 
 
-    val newsFlow: Flow<Result<NewsModel>> =
+    val newsFlow: Flow<Result<NewsResponse>> =
         repository.getNewUsingFlowAndStateFlow()
         .stateIn(
             scope = viewModelScope,
@@ -66,8 +66,8 @@ class BreakingViewModel @Inject constructor(private val repository: NewsReposito
         )
 
 
-    private val _newsStateFlow = MutableStateFlow<Result<NewsModel>>(Result.Loading())
-    val newsStateFlow: StateFlow<Result<NewsModel>> = _newsStateFlow.asStateFlow()
+    private val _newsStateFlow = MutableStateFlow<Result<NewsResponse>>(Result.Loading())
+    val newsStateFlow: StateFlow<Result<NewsResponse>> = _newsStateFlow.asStateFlow()
 
     init {
         fetchNews()

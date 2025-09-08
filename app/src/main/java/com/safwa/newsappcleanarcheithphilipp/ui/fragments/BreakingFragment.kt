@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
 import com.safwa.newsappcleanarcheithphilipp.databinding.FragmentBreakingNewsBinding
 import com.safwa.newsappcleanarcheithphilipp.ui.adapters.ArticleAdapters
 import com.safwa.newsappcleanarcheithphilipp.ui.viewmodels.BreakingViewModel
@@ -93,7 +93,7 @@ class BreakingFragment : Fragment() {
         binding.rv.setHasFixedSize(true)
     }
 
-    private fun fetchDataInViews(result: Result<NewsModel>, txt: String) {
+    private fun fetchDataInViews(result: Result<NewsResponse>, txt: String) {
 
         Timber.e(txt+"---resultxxx is ${Gson().toJson(result)}")
         when (result) {
@@ -107,7 +107,7 @@ class BreakingFragment : Fragment() {
                 binding.progress.visibility = View.GONE
                 binding.txtError.visibility = View.GONE
                 binding.rv.visibility = View.VISIBLE
-                adapter.submitList(result.data.articles)
+                adapter.submitList(result.data.data?.articles)
             }
             is Error -> {
                 binding.progress.visibility = View.GONE

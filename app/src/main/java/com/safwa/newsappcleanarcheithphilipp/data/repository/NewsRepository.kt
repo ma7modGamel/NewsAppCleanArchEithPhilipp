@@ -1,9 +1,13 @@
 package com.safwa.newsappcleanarcheithphilipp.data.repository
 
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.api.ApiServices
 import com.safwa.newsappcleanarcheithphilipp.data.datasource.local.db.ArticleDatabase
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.paging.GenericPagingSource
 import com.safwa.newsappcleanarcheithphilipp.utils.ApiUtils.safeApiCall
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.API_KEY
 import com.safwa.newsappcleanarcheithphilipp.utils.Result
@@ -22,7 +26,7 @@ class NewsRepository @Inject constructor(
         countryCode: String,
         pageNumber: Int,
         sortBy: String
-    ): Result<NewsModel> {
+    ): Result<NewsResponse> {
 
 
         val newsModel = apiService.getBreakingNews(
@@ -34,8 +38,24 @@ class NewsRepository @Inject constructor(
 
     }
 
+/*
+    fun getNewUsingFlowAndStateFlow(): Flow<Result<NewsRepository>> = flow {
+        emit(Result.Loading())
+        emit(
+            safeApiCall {
+                apiService.getBreakingNews(
+                    countryCode = "us",
+                    pageNumber = 1,
+                    sortBy = "publishedAt",
+                    API_KEY
+                )
+            }
+        )
+    }
 
-    fun getNewUsingFlowAndStateFlow(): Flow<Result<NewsModel>> = flow {
+ */
+
+    fun getNewUsingFlowAndStateFlow(): Flow<Result<NewsResponse>> = flow {
         emit(Result.Loading())
         emit(
             safeApiCall {
@@ -50,7 +70,8 @@ class NewsRepository @Inject constructor(
     }
 
 
-    fun getResultSearchFlowAndStateFlow(query: String): Flow<Result<NewsModel>> = flow {
+//
+    fun getResultSearchFlowAndStateFlow(query: String): Flow<Result<NewsResponse>> = flow {
         emit(Result.Loading())
         emit(
             safeApiCall {
@@ -63,6 +84,31 @@ class NewsRepository @Inject constructor(
             }
         )
     }
+
+
+    // دالة بتستخدم Pagination لجلب نتايج البحث
+//    fun getResultSearchFlowAndStateFlow(query: String): Flow<PagingData<NewsResponse>> {
+//        return Pager(
+//            config = PagingConfig(
+//                pageSize = 20,
+//                enablePlaceholders = false,
+//                initialLoadSize = 20
+//            ),
+//            pagingSourceFactory = {
+//                GenericPagingSource(object : GenericPagingSource.DataSource<NewsResponse> {
+//                    override suspend fun loadItems(page: Int, loadSize: Int): List<NewsResponse> {
+//                        val response = apiService.getSearchNews(
+//                            pageNumber = page,
+//                            sortBy = "publishedAt",
+//                            searchQuery = query,
+//                            apiKey = API_KEY
+//                        )
+//                        return (response.data?.articles ?: emptyList()) as List<NewsResponse> // افتراضاً إن NewsResponse فيه articles
+//                    }
+//                })
+//            }
+//        ).flow
+//    }
 
 
 

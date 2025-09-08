@@ -1,7 +1,7 @@
 package com.safwa.newsappcleanarcheithphilipp.data.datasource.api
 
 
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsModel
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants
 import com.safwa.newsappcleanarcheithphilipp.utils.Constants.Companion.API_KEY
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ interface ApiServices {
         @Query("page") pageNumber: Int=1,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String= API_KEY,
-    ): NewsModel
+    ): NewsResponse
 
 
     @GET("everything")
@@ -25,7 +25,7 @@ interface ApiServices {
         @Query("page") pageNumber: Int=1,
         @Query("sortBy") sortBy: String,
         @Query("apiKey") apiKey: String= API_KEY,
-    ): NewsModel
+    ): NewsResponse
 
 
 

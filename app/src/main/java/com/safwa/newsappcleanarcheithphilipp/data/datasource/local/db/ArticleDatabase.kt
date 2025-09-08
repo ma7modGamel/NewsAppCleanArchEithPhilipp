@@ -6,7 +6,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse.Data.Article
 
 
 @Database(entities = [Article::class], version = 1, exportSchema = false)

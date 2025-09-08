@@ -2,7 +2,8 @@ package com.safwa.newsappcleanarcheithphilipp.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.safwa.newsappcleanarcheithphilipp.data.models.posts.Article
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse
+import com.safwa.newsappcleanarcheithphilipp.data.models.posts.NewsResponse.Data.Article
 
 class ArticlePagingSource(private val source: DataSource) : PagingSource<Int, Article>() {
 
